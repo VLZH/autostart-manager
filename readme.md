@@ -18,6 +18,16 @@ Linux:
 Mac:
 * launchd
 
+## ToDo
+* add support of systemv, openrc
+* fix bugs in launchd, systemd
+* cli interface (simple version)
+* validation of settings
+* method isEnabled
+* show message if this script already created/removed with confirm overwriting
+* add tests
+* more features (Add more settings, add support of windows)
+
 ## Example Usage
 
 ```javascript
