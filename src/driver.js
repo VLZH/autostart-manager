@@ -25,9 +25,9 @@ class AutostartDriver {
         this.printInfoAboutInitSystem()
         this.runCommands(this.disable_commands, (err) => {
             if (err) callback(err)
+            this.removeScriptFile(this.destination)
             callback(null)
         })
-        this.removeScriptFile(this.destination)
     }
     writeScriptFile(scriptd, destination) {
         try {
