@@ -1,5 +1,7 @@
 const shelljs = require("shelljs")
+const isRoot = require("is-root")
 const path = require("path")
+const chalk = require('chalk')
 const debug = require("debug")('AutostartManager')
 
 const INIT_SYSTEMS = {
@@ -26,6 +28,7 @@ class AutostartManager {
             script: process.argv[1],
             args: [],
             env: [],
+            root_required: true,
             user: process.env.USER,
             user_home: process.env.HOME,
             start_message: "Script is running",
@@ -60,11 +63,13 @@ class AutostartManager {
      * Enable autostart on launch of system defined by your script
      */
     enable() {
+        if (this.settings.root_required && !isRoot) this.printRootRequired()
         this.driver.enable((err)=>{
             debugger;
         })
     }
     disable() {
+        if (this.settings.root_required && !isRoot) this.printRootRequired()
         this.driver.disable((err) => {
             debugger;
         })
@@ -73,6 +78,11 @@ class AutostartManager {
         return new Promise((resolve, reject) => {
 
         })
+    }
+
+    printRootRequired(){
+        console.log(chalk.red('== error =='))
+        console.log(chalk.red('Permition denied; Run this script as root'))
     }
 }
 

@@ -13,7 +13,7 @@ class AutostartDriver {
     }
     enable(callback) {
         console.log(chalk.green.bold(`=== enable autostart ===`))
-        console.log(chalk.blue(`Init system:`), chalk.red(this.manager.initsys))
+        this.printInfoAboutInitSystem()
         this.writeScriptFile(this.template, this.destination)
         this.runCommands(this.enable_commands, (err) => {
             if (err) callback(err)
@@ -22,7 +22,8 @@ class AutostartDriver {
     }
     disable(callback) {
         console.log(chalk.green.bold(`=== disable autostart ===`))
-        this.runCommands(this.disable_commands, (err)=>{
+        this.printInfoAboutInitSystem()
+        this.runCommands(this.disable_commands, (err) => {
             if (err) callback(err)
             callback(null)
         })
@@ -31,16 +32,18 @@ class AutostartDriver {
     writeScriptFile(scriptd, destination) {
         try {
             fs.writeFileSync(destination, scriptd);
+            this.printCreateScriptFile(destination)
         }
         catch (err) {
-            console.log(chalk.red.bold(`Error on writing script file to: ${destination}`))
+            this.printErrorCreateScriptFile(destination)
         }
     }
     removeScriptFile(destination) {
         try {
             fs.unlinkSync(destination)
+            this.printRemoveScriptFile(destination)
         } catch (err) {
-            console.log(chalk.red.bold(`Error on removing file from: ${destination}`))
+            this.printErrorRemoveScriptFile(destination)
         }
     }
     /**
@@ -48,13 +51,13 @@ class AutostartDriver {
      * @param {string[]} commands 
      */
     runCommands(commands, callback) {
-        async.forEachLimit(commands, 1, function (command, next) {
-            shelljs.exec(command, function (code, stdout, stderr) {
+        async.forEachLimit(commands, 1, (command, next) => {
+            shelljs.exec(command, (code, stdout, stderr) => {
                 if (code === 0) {
-                    console.log(chalk.blue.bold(`${command} [DONE]`))
+                    this.printSuccessCommand(command)
                     return next();
                 } else {
-                    console.log(chalk.red.bold(`${command} [ERROR] Exit code : ${code}`))
+                    this.printErrorCommand(command, code, stdout, stderr)
                     return next(new Error(command + ' failed, see error above.'));
                 }
             })
@@ -83,17 +86,40 @@ class AutostartDriver {
         $1
         `
     }
-    printTemplateStart(){
+    printTemplateStart() {
         console.log(chalk.blue(`--- template start ---`))
     }
-    printTemplateEnd(){
+    printTemplateEnd() {
         console.log(chalk.blue(`--- template end ---`))
     }
-    printTemplate(template){
+    printTemplate(template) {
         console.log(chalk.gray(template))
     }
-    printDestination(destination){
+    printDestination(destination) {
         console.log(chalk.blue(`Destination: ${destination}`))
+    }
+    printSuccessCommand(command) {
+        console.log(chalk.blue(`Success command: ${command}`))
+    }
+    printErrorCommand(command, code, stdout, stderr) {
+        console.log(chalk.red(`Failure command: ${command} Exit code : ${code}`))
+    }
+    printInfoAboutInitSystem(){
+        console.log(chalk.blue(`Init system:`), chalk.red(this.manager.initsys))
+    }
+    //Remove file
+    printRemoveScriptFile(destination){
+        console.log(chalk.blue(`Remove script file: ${destination}`))
+    }
+    printErrorRemoveScriptFile(destination){
+        console.log(chalk.red(`Error on removing file from: ${destination}`))
+    }
+    //Create file
+    printCreateScriptFile(destination){
+        console.log(chalk.blue(`Create script file: ${destination}`))
+    }
+    printErrorCreateScriptFile(destination){
+        console.log(chalk.red(`Error on writing script file to: ${destination}`))
     }
 }
 

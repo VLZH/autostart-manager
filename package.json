@@ -1,12 +1,20 @@
 {
   "name": "autostart-manager",
-  "version": "0.0.0",
+  "version": "0.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {},
   "author": "https://github.com/VLZH",
   "license": "MIT",
-  "keywords": ["launch", "init.d", "autostart", "autostart forever", "systemd", "upstart", "launchd"],
+  "keywords": [
+    "launch",
+    "init.d",
+    "autostart",
+    "autostart forever",
+    "systemd",
+    "upstart",
+    "launchd"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/VLZH/autostart-manager.git"
@@ -18,6 +26,7 @@
     "async": "^2.3.0",
     "chalk": "^1.1.3",
     "debug": "^2.6.3",
+    "is-root": "^1.0.0",
     "shelljs": "^0.7.7"
   }
 }
