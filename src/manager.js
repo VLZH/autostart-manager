@@ -63,13 +63,13 @@ class AutostartManager {
      * Enable autostart on launch of system defined by your script
      */
     enable() {
-        if (this.settings.root_required && !isRoot) this.printRootRequired()
+        if (this.settings.root_required && !isRoot()) return this.printRootRequired()
         this.driver.enable((err)=>{
             debugger;
         })
     }
     disable() {
-        if (this.settings.root_required && !isRoot) this.printRootRequired()
+        if (this.settings.root_required && !isRoot()) return this.printRootRequired()
         this.driver.disable((err) => {
             debugger;
         })
