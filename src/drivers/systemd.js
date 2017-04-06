@@ -47,8 +47,7 @@ class SystemDAutostartDriver extends AutostartDriver {
         PIDFile=/var/run/${this.manager.settings.name}.pid
 
         ExecStart=${this.manager.settings.script} ${args}
-        #ExecReload=%PM2_PATH% reload all
-        #ExecStop=%PM2_PATH% kill
+        ExecStop= kill -9 $(cat /var/run/${this.manager.settings.name}.pid)
 
         [Install]
         WantedBy=multi-user.target

@@ -24,9 +24,6 @@ class UpstartAutostartDriver extends AutostartDriver {
         return destination;
     }
     get template() {
-        //TODO add setting of user
-        //start-stop-daemon -Sbmp $PID_FILE --chuid $USER -x $BIN_PATH -- ${this.manager.settings.args.join(" ")}
-        //                                  ^^^^^^^^^^^^^
         let template;
         template = `
         #!/bin/bash
@@ -36,12 +33,12 @@ class UpstartAutostartDriver extends AutostartDriver {
         #USER=vladimir
         start(){
             echo ${this.manager.settings.start_message}
-            start-stop-daemon -Sbmp $PID_FILE -x $BIN_PATH -- ${this.manager.settings.args.join(" ")}
+            start-stop-daemon -Sbmp $PID_FILE --chuid ${this.manager.settings.user} -x $BIN_PATH -- ${this.manager.settings.args.join(" ")}
         }
 
         stop(){
             echo ${this.manager.settings.stop_message}
-            start-stop-daemon -Kp $PID_FILE --chuid $USER
+            start-stop-daemon -Kp $PID_FILE --chuid ${this.manager.settings.user}
         }
         $1
         `
