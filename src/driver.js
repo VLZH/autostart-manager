@@ -1,8 +1,7 @@
 const fs = require('fs')
-const shelljs = require("shelljs")
-const async = require("async")
+const shelljs = require('shelljs')
+const async = require('async')
 const chalk = require('chalk')
-const debug = require('debug')('AutostartDriver')
 
 class AutostartDriver {
     /**
@@ -12,7 +11,7 @@ class AutostartDriver {
         this.manager = manager
     }
     enable(callback) {
-        console.log(chalk.green.bold(`=== enable autostart ===`))
+        console.log(chalk.green.bold('=== enable autostart ==='))
         this.printInfoAboutInitSystem()
         this.writeScriptFile(this.template, this.destination)
         this.runCommands(this.enable_commands, (err) => {
@@ -21,7 +20,7 @@ class AutostartDriver {
         })
     }
     disable(callback) {
-        console.log(chalk.green.bold(`=== disable autostart ===`))
+        console.log(chalk.green.bold('=== disable autostart ==='))
         this.printInfoAboutInitSystem()
         this.runCommands(this.disable_commands, (err) => {
             if (err) callback(err)
@@ -31,7 +30,7 @@ class AutostartDriver {
     }
     writeScriptFile(scriptd, destination) {
         try {
-            fs.writeFileSync(destination, scriptd);
+            fs.writeFileSync(destination, scriptd)
             this.printCreateScriptFile(destination)
         }
         catch (err) {
@@ -55,10 +54,10 @@ class AutostartDriver {
             shelljs.exec(command, (code, stdout, stderr) => {
                 if (code === 0) {
                     this.printSuccessCommand(command)
-                    return next();
+                    return next()
                 } else {
                     this.printErrorCommand(command, code, stdout, stderr)
-                    return next(new Error(command + ' failed, see error above.'));
+                    return next(new Error(command + ' failed, see error above.'))
                 }
             })
         }, function (err) {
@@ -87,10 +86,10 @@ class AutostartDriver {
         `
     }
     printTemplateStart() {
-        console.log(chalk.blue(`--- template start ---`))
+        console.log(chalk.blue('--- template start ---'))
     }
     printTemplateEnd() {
-        console.log(chalk.blue(`--- template end ---`))
+        console.log(chalk.blue('--- template end ---'))
     }
     printTemplate(template) {
         console.log(chalk.gray(template))
@@ -105,7 +104,7 @@ class AutostartDriver {
         console.log(chalk.red(`Failure command: ${command} Exit code : ${code}`))
     }
     printInfoAboutInitSystem(){
-        console.log(chalk.blue(`Init system:`), chalk.red(this.manager.initsys))
+        console.log(chalk.blue('Init system:'), chalk.red(this.manager.initsys))
     }
     //Remove file
     printRemoveScriptFile(destination){

@@ -1,8 +1,8 @@
-const shelljs = require("shelljs")
-const isRoot = require("is-root")
-const path = require("path")
+const shelljs = require('shelljs')
+const isRoot = require('is-root')
+const path = require('path')
 const chalk = require('chalk')
-const debug = require("debug")('AutostartManager')
+const debug = require('debug')('AutostartManager')
 
 const INIT_SYSTEMS = {
     'systemctl': 'systemd',
@@ -10,13 +10,13 @@ const INIT_SYSTEMS = {
     'chkconfig': 'systemv',
     'rc-update': 'openrc',
     'launchctl': 'launchd'
-};
+}
 
 const REQUIRED_SETTINGS = ['name']
 
 class AutostartManager {
     constructor(settings) {
-        if (typeof settings !== 'object') throw new Error(`required argument settings is not object`)
+        if (typeof settings !== 'object') throw new Error('required argument settings is not object')
         for (let req_item of REQUIRED_SETTINGS) {
             if (!Object.keys(settings).includes(req_item)) {
                 throw new Error(`Not defined required setting: ${req_item}`)
@@ -31,8 +31,8 @@ class AutostartManager {
             root_required: true,
             user: process.env.USER,
             user_home: process.env.HOME,
-            start_message: "Script is running",
-            stop_message: "Script is stopped",
+            start_message: 'Script is running',
+            stop_message: 'Script is stopped',
             node_path: path.dirname(process.execPath),
             description: settings.name,
             documentation_link: ''
@@ -50,7 +50,7 @@ class AutostartManager {
             }
         }
         // if nothing was be returned that mean init system on this system is undefined
-        debug("Error Undefined Init System")
+        debug('Error Undefined Init System')
     }
     /**
      * @return {AutostartDriver} driver
@@ -65,30 +65,25 @@ class AutostartManager {
     enable() {
         if (this.settings.root_required && !isRoot()) return this.printRootRequired()
         this.driver.enable((err)=>{
-            debugger;
+            if (err) throw err
         })
     }
     disable() {
         if (this.settings.root_required && !isRoot()) return this.printRootRequired()
         this.driver.disable((err) => {
-            debugger;
+            if (err) throw err
         })
     }
-    isEnable() {
-        return new Promise((resolve, reject) => {
+    // isEnable() {
+    //     return new Promise((resolve, reject) => {
 
-        })
-    }
+    //     })
+    // }
 
     printRootRequired(){
         console.log(chalk.red('== error =='))
         console.log(chalk.red('Permition denied; Run this script as root'))
     }
-}
-
-function getDateStr() {
-    let d = new Date()
-    return `${d.getFullYear()}_${d.getMonth()}_${d.getDay()}_${d.getHours()}_${d.getMinutes()}`
 }
 
 module.exports = AutostartManager

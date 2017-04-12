@@ -4,7 +4,7 @@ const AutostartDriver = require('../driver')
 
 class LaunchDAutostartDriver extends AutostartDriver {
     get enable_commands() {
-        console.log(chalk.blue.bold(`Getting enable_commands`))
+        console.log(chalk.blue.bold('Getting enable_commands'))
         return [
             `launchctl load -w ${this.destination}`
         ]
@@ -12,7 +12,7 @@ class LaunchDAutostartDriver extends AutostartDriver {
     get disable_commands() {
         return [
             `launchctl remove ${this.destination}`
-        ];
+        ]
     }
     get destination() {
         let destination = path.join(this.manager.settings.user_home, `Library/LaunchAgents/com.${this.manager.settings.name}.plist`)
@@ -20,7 +20,7 @@ class LaunchDAutostartDriver extends AutostartDriver {
         return destination
     }
     get template() {
-        let args = "", template;
+        let args = '', template
         if (this.manager.settings.script.args && Array.isArray(this.manager.settings.script.args)) {
             args = this.manager.settings.script.args.reduce((prev, curr) => {
                 return prev + `<string>${curr}</string>`
